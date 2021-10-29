@@ -27,11 +27,34 @@ namespace WebService
 
             cbxValuta.DataSource = currencies;
 
+            MNBArfolyamServiceSoapClient mnbService = new MNBArfolyamServiceSoapClient();
+
+            GetCurrenciesRequestBody request = new GetCurrenciesRequestBody();
+
+            var response = mnbService.GetCurrencies(request);
+            string result = response.GetCurrenciesResult;
+
+            XmlDocument vxml = new XmlDocument();
+
+            vxml.LoadXml(result);
+
+            foreach (XmlElement item in vxml.DocumentElement.FirstChild.ChildNodes)
+            {
+                currencies.Add(item.InnerText);
+            }
+
+
+
             RefreshData();
         }
 
         private void RefreshData()
         {
+            if (cbxValuta.SelectedItem == null)
+            {
+                return;
+            }
+
             Rates.Clear();
 
             string xmlsting = GetExchangeRates();
@@ -78,6 +101,11 @@ namespace WebService
 
                 XmlElement child = (XmlElement)item.FirstChild;
 
+                if (child == null)
+                {
+                    continue;
+                }
+
                 r.Currency = child.GetAttribute("curr");
 
                 r.Value = decimal.Parse(child.InnerText);
@@ -96,6 +124,8 @@ namespace WebService
 
         string GetExchangeRates()
         {
+
+
             MNBArfolyamServiceSoapClient mnbService = new MNBArfolyamServiceSoapClient();
 
             GetExchangeRatesRequestBody request = new GetExchangeRatesRequestBody();
