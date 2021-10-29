@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
 using WebService.Entities;
 using WebService.MnbServiceReference;
@@ -27,6 +28,30 @@ namespace WebService
             LoadXml(xmlsting);
 
             dataGridView1.DataSource = Rates;
+
+            Charting();
+        }
+
+        private void Charting()
+        {
+            chartRateData.DataSource = Rates;
+
+            var series = chartRateData.Series[0];
+
+            series.ChartType = SeriesChartType.Line;
+            series.XValueMember = "Date";
+            series.YValueMembers = "Value";
+            series.BorderWidth = 2;
+
+            var chartArea = chartRateData.ChartAreas[0];
+
+            chartArea.AxisX.MajorGrid.Enabled = false;
+            chartArea.AxisY.MajorGrid.Enabled = false;
+            chartArea.AxisY.IsStartedFromZero = false;
+
+            var legend = chartRateData.Legends[0];
+            legend.Enabled = false;
+
         }
 
         private void LoadXml(string input)
