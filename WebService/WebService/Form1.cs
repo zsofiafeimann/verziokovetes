@@ -19,9 +19,20 @@ namespace WebService
     {
         BindingList<RateData> Rates = new BindingList<RateData>();
 
+        BindingList<string> currencies = new BindingList<string>();
+
         public Form1()
         {
             InitializeComponent();
+
+            cbxValuta.DataSource = currencies;
+
+            RefreshData();
+        }
+
+        private void RefreshData()
+        {
+            Rates.Clear();
 
             string xmlsting = GetExchangeRates();
 
@@ -89,9 +100,9 @@ namespace WebService
 
             GetExchangeRatesRequestBody request = new GetExchangeRatesRequestBody();
 
-            request.currencyNames = "EUR";
-            request.startDate = "2020-01-01";
-            request.endDate = "2020-06-30";
+            request.currencyNames = cbxValuta.SelectedItem.ToString(); //"EUR" ;
+            request.startDate = TolPicker.Value.ToString("yyyy-MM-dd"); //"2020-01-01";
+            request.endDate = IgPicker.Value.ToString("yyyy-MM-dd"); //"2020-06-30";
 
             //mnbService.GetExchangeRates(request);
 
@@ -100,6 +111,14 @@ namespace WebService
             return result;
         }
 
+        private void cbxValuta_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
+        }
+
+        private void filterChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
     }
 }
