@@ -8,9 +8,9 @@ namespace FejlesztésiMintak.Entities
 {
     public class BallFactory
     {
-        public Ball CreateNew()
-        {
-            return new Ball();
+            public Ball CreateNew()
+            {
+                return new Ball();
+            }
         }
     }
-}

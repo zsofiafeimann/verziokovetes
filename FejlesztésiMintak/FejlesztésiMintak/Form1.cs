@@ -38,7 +38,7 @@ namespace FejlesztésiMintak
         {
             var ball = Factory.CreateNew();
             _balls.Add(ball);
-            ball.Left = -ball.Left;
+            ball.Left = -ball.Width;
             mainPanel.Controls.Add(ball);
         }
 
