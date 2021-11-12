@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JatekGyar.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +13,15 @@ namespace JatekGyar
 {
     public partial class Form1 : Form
     {
+
+
+
         public Form1()
         {
             InitializeComponent();
+            
+
+            
         }
     }
 }
