@@ -23,12 +23,15 @@ namespace Mikroszimulacio
         public Form1()
         {
             InitializeComponent();
-
-            Population = GetPopulation(@"C:\Users\User\SULI\LET\nép-teszt.csv");
             BirthProbabilities = GetBirthProbability(@"C:\Users\User\SULI\LET\születés.csv");
             DeathProbabilities = GetDeathProbability(@"C:\Users\User\SULI\LET\halál.csv");
 
-            for (int year = 2005; year <= 2024; year++)
+        }
+
+        private void StartSimulation(int endYear, string csvPath)
+        {
+            Population = GetPopulation(csvPath);
+            for (int year = 2005; year <= endYear; year++)
             {
                 for (int i = 0; i < Population.Count; i++)
                 {
@@ -40,16 +43,15 @@ namespace Mikroszimulacio
                                   select x).Count();
 
                 int nbrOfFemales = (from x in Population
-                                  where x.Gender == Gender.Female && x.IsAlive
-                                  select x).Count();
+                                    where x.Gender == Gender.Female && x.IsAlive
+                                    select x).Count();
 
-                Console.WriteLine(string.Format(
-                    "Év:{0} Fiúk:{1} Lányok:{2}", 
-                    year, 
-                    nbrOfMales, 
-                    nbrOfFemales));
+                richTextBox1.Text += string.Format(
+                    "Szimulációs év:{0}\n\t Fiúk:{1} \n\t Lányok:{2}\n\n",
+                    year,
+                    nbrOfMales,
+                    nbrOfFemales);
             }
-
         }
 
         public List<Person> GetPopulation(string csvPath)
@@ -86,7 +88,7 @@ namespace Mikroszimulacio
                     var line = sr.ReadLine().Split(';');
                     birthProbabilities.Add(new BirthProbability()
                     {
-                        BirthYear = int.Parse(line[0]),
+                        Age = int.Parse(line[0]),
                         NbrOfChildren = int.Parse(line[1]),
                         P = double.Parse(line[2])
                     });
@@ -138,7 +140,7 @@ namespace Mikroszimulacio
             if (rng.NextDouble() <= pDeath)
                 person.IsAlive = false;
 
-            //Születés kezelése - csak az élő nők szülnek
+            //Születés kezelése -csak az élő nők szülnek
             if (person.IsAlive && person.Gender == Gender.Female)
             {
                 //Szülési valószínűség kikeresése
@@ -154,6 +156,22 @@ namespace Mikroszimulacio
                     újszülött.Gender = (Gender)(rng.Next(1, 3));
                     Population.Add(újszülött);
                 }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            StartSimulation((int)numericUpDown1.Value, textBox1.Text);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var ofd = new OpenFileDialog();
+            ofd.FileName = textBox1.Text;
+
+            if (ofd.ShowDialog() !=DialogResult.OK)
+            {
+                textBox1.Text = ofd.FileName;
             }
         }
     }
