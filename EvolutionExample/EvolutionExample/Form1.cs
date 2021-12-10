@@ -50,7 +50,25 @@ namespace EvolutionExample
 
             var topPerformers = playerList.Take(populationSize / 2).ToList();
 
+            gc.ResetCurrentLevel();
+            foreach (var p in topPerformers)
+            {
+                var brain = p.Brain.Clone();
 
+                if (generation % 3 == 0)
+                {
+                    gc.AddPlayer(brain.ExpandBrain(nbrOfStepsIncrement));
+                }
+                else
+                gc.AddPlayer(brain);
+                if (generation % 3 == 0)
+                {
+                    gc.AddPlayer(brain.Mutate().ExpandBrain(nbrOfStepsIncrement));
+                }
+                else
+                gc.AddPlayer(brain.Mutate());
+            }
+            gc.Start();
         }
     }
 }
