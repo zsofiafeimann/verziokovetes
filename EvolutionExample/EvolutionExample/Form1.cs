@@ -26,6 +26,8 @@ namespace EvolutionExample
         {
             InitializeComponent();
 
+            gc.GameOver += Gc_GameOver;
+
             ga = gc.ActivateDisplay();
             this.Controls.Add(ga);
 
@@ -33,8 +35,22 @@ namespace EvolutionExample
             {
                 gc.AddPlayer(nbrOfSteps);
             }
-            
+
             gc.Start();
+        }
+
+        private void Gc_GameOver(object sender)
+        {
+            generation++;
+            lblgeneration.Text = generation.ToString() + ". genárció";
+
+            var playerList = from p in gc.GetCurrentPlayers()
+                             orderby p.GetFitness() descending
+                             select p;
+
+            var topPerformers = playerList.Take(populationSize / 2).ToList();
+
+
         }
     }
 }
